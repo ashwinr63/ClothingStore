@@ -2,11 +2,20 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './routes/home/home.component'
 
+
+const Shop = () => {
+  return <h1> I'm Shop Component</h1> 
+}
+
+
 const App = () => {
+  
   return (
 
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home />} >
+        <Route path="Shop" element={<Shop />} />
+      </Route>
     </Routes>
 
   )
