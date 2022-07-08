@@ -5,10 +5,12 @@ import {
     getAuth,
     signInWithRedirect,
     signInWithPopup,
-    GoogleAuthProvider
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword
 } from 'firebase/auth'
 
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,25 +27,24 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
-provider.setCustomParameters({
+googleProvider.setCustomParameters({
     prompt: "select_account"
 })
 
 
 export const auth = getAuth()
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider)
-
+export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider)
 
 // FireStore Database
 
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (userAuth) => {
+    if(!userAuth) return;
     const userDocRef = doc(db, 'users', userAuth.uid);
-
-    console.log(userDocRef)
 
     const userSnapshot = await getDoc(userDocRef)
     console.log(userSnapshot.exists())
@@ -51,12 +52,12 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 
     if(!userSnapshot.exists()) {
         const {displayName, email} = userAuth
-        const createAt = new Date()
+        const createdAt = new Date()
         try {
             await setDoc(userDocRef, {
                 displayName,
                 email,
-                createAt
+                createdAt
             })
         }
             catch (error) {
@@ -64,10 +65,10 @@ export const createUserDocumentFromAuth = async (userAuth) => {
         }
     }
 
-    return userDocRef
-    /* if User Data exists */
+    return userDocRef} 
 
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+    if(!email || !password) return
 
-
-    /* If User data does not exists */
-} 
+    createUserWithEmailAndPassword(auth, email, password)
+}
