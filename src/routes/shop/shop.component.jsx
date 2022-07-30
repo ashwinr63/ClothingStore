@@ -4,8 +4,6 @@ import Category from '../category/category.component.jsx'
 
 import { Routes, Route } from 'react-router-dom'
 
-import './shop.styles.scss'
-
 const Shop = () => {
 
     return (
