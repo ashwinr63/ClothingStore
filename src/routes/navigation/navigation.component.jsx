@@ -1,7 +1,6 @@
 import { Fragment, useContext } from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom"
-import { UserContext } from "../../contexts/user.context";
 import { CartContext } from "../../contexts/cart.context";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { ReactComponent as ShoppingLogo } from '../../assests/crown.svg'

@@ -1,6 +1,5 @@
-import { compose, applyMiddleware } from 'redux';
+import { compose, applyMiddleware,legacy_createStore as createStore } from 'redux';
 import logger from 'redux-logger';
-import { legacy_createStore as createStore } from 'redux';
 import { rootReducer } from './root-reducer';
 
 const middleWares = [process.env.NODE_ENV === 'development' && logger].filter(
