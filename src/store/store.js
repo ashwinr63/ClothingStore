@@ -2,7 +2,20 @@ import { compose, applyMiddleware,legacy_createStore as createStore } from 'redu
 import logger from 'redux-logger';
 import { rootReducer } from './root-reducer';
 
-const middleWares = [process.env.NODE_ENV === 'development' && logger].filter(
+const loggerMiddlewares = (store) => (next) => (action) => {
+  if(!action.type) {
+    return next(action)
+  }
+
+  console.log('type: ', action.type);
+  console.log('payload: ', action.payload);
+  console.log('currentState: ', store.getState());
+
+  next(action)
+  console.log('nextState: ', store.getState());
+}
+
+const middleWares = [loggerMiddlewares].filter(
   Boolean
 );
 
