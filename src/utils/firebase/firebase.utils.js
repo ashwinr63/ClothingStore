@@ -28,7 +28,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-// eslint-disable-next-line no-unused-vars
 export const firebaseApp = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
@@ -37,15 +36,14 @@ googleProvider.setCustomParameters({
     prompt: 'select_account',
 });
 
-export const auth = getAuth();
+const auth = getAuth();
 export const signInWithGooglePopup = () =>
     signInWithPopup(auth, googleProvider);
 export const signInWithGoogleRedirect = () =>
     signInWithRedirect(auth, googleProvider);
 
-export const db = getFirestore();
+const db = getFirestore();
 // database
-
 export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
     const collectionRef = collection(db, collectionKey)
     const batch = writeBatch(db)
