@@ -10,10 +10,12 @@ const CategoriesPreview = () => {
     const categoriesMap = useSelector(selectCategoriesMap)
     
     return (
-        <Fragment className='category-preview-container'>
+        <Fragment>
             {Object.keys(categoriesMap).map((key) => {
                 const products = categoriesMap[key];
-                return <CategoryPreview key={key} title={key} products={products} />;
+                return (
+                <CategoryPreview key={key} title={key} products={products} />
+                )
             })}
         </Fragment>
     );

@@ -1,4 +1,4 @@
-import { compose, applyMiddleware,legacy_createStore as createStore } from 'redux';
+import { compose, createStore, applyMiddleware } from 'redux';
 import { rootReducer } from './root-reducer';
 
 const loggerMiddlewares = (store) => (next) => (action) => {
