@@ -21,24 +21,20 @@ import {
   getDocs,
 } from 'firebase/firestore';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// Firebase configuration from .env variables
 const firebaseConfig = {
-    apiKey: "AIzaSyAtj3lwbOu3deUrYEB3NZFETkVl-1VqecA",
-    authDomain: "clothing-store-db-f950f.firebaseapp.com",
-    projectId: "clothing-store-db-f950f",
-    storageBucket: "clothing-store-db-f950f.appspot.com",
-    messagingSenderId: "463330538655",
-    appId: "1:463330538655:web:0b4b2ae90625c15576deaa"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
-
 googleProvider.setCustomParameters({
   prompt: 'select_account',
 });

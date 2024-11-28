@@ -26,3 +26,4 @@ jsconfig.json
 yarn.lock
 .gitignore
 pnpm-lock.yaml
+.env
