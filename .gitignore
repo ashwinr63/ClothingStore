@@ -27,3 +27,4 @@ yarn.lock
 .gitignore
 pnpm-lock.yaml
 .env
+bun.lockb

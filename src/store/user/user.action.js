@@ -1,5 +1,3 @@
-import USER_ACTION_TYPES from './user.types';
-import { createAction } from '../../utils/reducer/reducer.utils';
-
-export const setCurrentUser = (user) =>
-  createAction(USER_ACTION_TYPES.SET_CURRENT_USER, user);
+// With Redux Toolkit, actions are auto-generated from createSlice
+// Keep this file for backward compatibility or remove if not needed
+export { setCurrentUser } from './user.reducer';

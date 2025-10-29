@@ -3,7 +3,7 @@ import { useState } from "react"
 import FormInput from '../form-input/form-input.component'
 import Button, {BUTTON_TYPE_CLASSES} from "../button/button.component"
 
-
+import toast from 'react-hot-toast';
 import { signInWithGooglePopup, signInAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils"
 
 import {ButtonContainer, SignInContainer} from './sign-in-form.styles.jsx'
@@ -34,13 +34,13 @@ const SignInForm = () => {
         } catch (error) {
             switch (error.code) {
                 case 'auth/wrong-password':
-                    alert('Incorrect password for email')
+                    toast.error('Incorrect password for email')
                     break
                 case 'auth/user-not-found':
-                    alert('User Not Found')
+                    toast.error('User Not Found')
                     break
                 default:
-                    console.log(error)
+                    toast.error('Error signing in')
             }
         }
     }
