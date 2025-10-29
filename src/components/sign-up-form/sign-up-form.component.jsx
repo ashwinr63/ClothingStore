@@ -8,7 +8,7 @@ import {
   createUserDocumentFromAuth,
 } from '../../utils/firebase/firebase.utils';
 
-
+import toast from 'react-hot-toast';
 
 import {SignUpContainer} from './sign-up-form.styles.jsx';
 
@@ -33,7 +33,7 @@ const SignUpForm = () => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      alert('passwords do not match');
+      toast.error('passwords do not match');
       return;
     }
 
@@ -48,9 +48,9 @@ const SignUpForm = () => {
       resetFormFields();
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
-        alert('Cannot create user, email already in use');
+        toast.error('Cannot create user, email already in use');
       } else {
-        console.log('user creation encountered an error', error);
+        toast.error('user creation encountered an error', error);
       }
     }
   };

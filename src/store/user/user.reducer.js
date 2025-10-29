@@ -1,16 +1,33 @@
-import USER_ACTION_TYPES from './user.types';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const USER_INITIAL_STATE = {
   currentUser: null,
 };
 
-export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case USER_ACTION_TYPES.SET_CURRENT_USER:
-      return { ...state, currentUser: payload };
-    default:
-      return state;
-  }
+// Helper to extract serializable user data
+const extractUserData = (user) => {
+  if (!user) return null;
+  
+  return {
+    uid: user.uid,
+    email: user.email,
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+    emailVerified: user.emailVerified,
+  };
 };
+
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState: USER_INITIAL_STATE,
+  reducers: {
+    setCurrentUser: (state, action) => {
+      state.currentUser = extractUserData(action.payload);
+    },
+  },
+});
+
+
+export const { setCurrentUser } = userSlice.actions;
+export const userReducer = userSlice.reducer;

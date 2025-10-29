@@ -1,23 +1,24 @@
-import { compose, createStore, applyMiddleware } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { rootReducer } from './root-reducer';
 
-const loggerMiddlewares = (store) => (next) => (action) => {
-  if(!action.type) {
-    return next(action)
-  }
-
-  console.log('type: ', action.type);
-  console.log('payload: ', action.payload);
-  console.log('currentState: ', store.getState());
-
-  next(action)
-  console.log('nextState: ', store.getState());
-}
-
-const middleWares = [loggerMiddlewares].filter(
-  Boolean
-);
-
-const composedEnhancers = compose(applyMiddleware(...middleWares));
-
-export const store = createStore(rootReducer, undefined, composedEnhancers);
+export const store = configureStore({
+  reducer: rootReducer,
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types completely
+        ignoredActions: [
+          'user/setCurrentUser',
+          /^user\//, // Match any user/ action
+        ],
+        // Ignore these paths in the state
+        ignoredPaths: [
+          'user.currentUser',
+          'payload',
+        ],
+        // Ignore actions dispatched by Redux Toolkit
+        ignoredActionsPaths: ['meta.arg', 'payload'],
+      },
+    }),
+});

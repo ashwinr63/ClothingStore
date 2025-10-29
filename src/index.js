@@ -1,29 +1,27 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { Toaster } from 'react-hot-toast';
 import App from './App';
+import ErrorBoundary from './components/error-boundary/error-boundary.component';
 
-import { CartProvider } from './contexts/cart.context';
 import { store } from './store/store';
 import './index.scss';
 
 const rootElement = document.getElementById('root');
 
-render(
-  <React.StrictMode>
-    <Provider store ={store}>
-    <BrowserRouter>
-          <CartProvider>
-            <App />
-          </CartProvider>
-    </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
-  rootElement
-);
+const root = createRoot(rootElement);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-// reportWebVitals();
+root.render(
+  <React.StrictMode>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <Toaster />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </ErrorBoundary>
+  </React.StrictMode>
+);
