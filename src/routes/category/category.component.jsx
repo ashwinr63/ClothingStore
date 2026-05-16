@@ -8,11 +8,9 @@ const Category = () => {
 
     const { category } = useParams();
     const categoriesMap = useSelector(selectCategoriesMap)
-    console.log('render/re-rendering category')
     const [products, setProducts] = useState(categoriesMap[category])
    
     useEffect(() => {
-        console.log('effect fired calling setProducts')
         setProducts(categoriesMap[category])
     }, [category, categoriesMap])
 
@@ -22,7 +20,9 @@ const Category = () => {
             <CategoryContainer>
 
                 {products &&
-                    products.map((product) => <ProductCard key={product.id} product={product} />)
+                    products.map((product) => (
+                      <ProductCard key={product.id} product={product} categoryName={category} />
+                    ))
                 }
             </CategoryContainer>
         </Fragment>

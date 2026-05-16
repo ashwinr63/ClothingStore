@@ -1,45 +1,63 @@
 import styled from 'styled-components';
 
 export const BaseButton = styled.button`
-  min-width: 165px;
+  min-width: 140px;
   width: auto;
-  height: 50px;
-  letter-spacing: 0.5px;
-  line-height: 50px;
-  padding: 0 35px 0 35px;
-  font-size: 15px;
-  background-color: black;
-  color: white;
+  height: 48px;
+  letter-spacing: 0.04em;
+  line-height: 48px;
+  padding: 0 1.75rem;
+  font-size: 0.8rem;
+  background-color: var(--color-primary);
+  color: #fff;
   text-transform: uppercase;
-  font-family: 'Open Sans Condensed';
-  font-weight: bolder;
+  font-family: var(--font-body);
+  font-weight: 600;
   border: none;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+
   &:hover {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  &:disabled:hover {
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
   }
 `;
 
 export const GoogleSignInButton = styled(BaseButton)`
   background-color: #4285f4;
-  color: white;
+
   &:hover {
     background-color: #357ae8;
-    border: none;
   }
 `;
 
 export const InvertedButton = styled(BaseButton)`
-  background-color: white;
-  color: black;
-  border: 1px solid black;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  box-shadow: none;
+
   &:hover {
-    background-color: black;
-    color: white;
-    border: none;
+    background-color: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
   }
 `;

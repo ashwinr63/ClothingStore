@@ -15,10 +15,10 @@ const SpinnerOverlay = styled.div`
 const SpinnerContainer = styled.div`
   width: 48px;
   height: 48px;
-  border: 4px solid rgba(0,0,0,0.1);
-  border-left-color: black;
+  border: 3px solid var(--color-border);
+  border-left-color: var(--color-accent);
   border-radius: 50%;
-  animation: ${spin} 1s linear infinite;
+  animation: ${spin} 0.8s linear infinite;
 `;
 
 const Spinner = () => (

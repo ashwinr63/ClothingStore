@@ -1,70 +1,117 @@
-# Getting Started with Create React App
+﻿# Clothing Store (CRWN Pattern)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern CRWN-style clothing store with Firebase, Redux Toolkit, Razorpay checkout, and order history.
 
-## Available Scripts
+## Setup (Bun)
 
-In the project directory, you can run:
+1. Install [Bun](https://bun.sh), then install dependencies:
+   - `bun install`
+2. Copy `.env.example` â†’ `.env` and add Firebase values.
+3. Start the app:
+   - `bun run start`
 
-### `npm start`
+### Payments â€” Razorpay
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Demo mode (no keys):** keep `REACT_APP_USE_MOCK_PAYMENT=true` in `.env`. Only run `bun run start`.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Test payments:** from [Razorpay Dashboard](https://dashboard.razorpay.com) â†’ Settings â†’ API Keys (test mode):
 
-### `npm test`
+```env
+REACT_APP_RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
+REACT_APP_USE_MOCK_PAYMENT=false
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Run two terminals:
 
-### `npm run build`
+- `bun run start:server` â€” payment API on port 4242
+- `bun run start` â€” React app
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Checkout opens the Razorpay modal. Amounts use INR (â‚¹).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Scripts
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Command | Description |
+|---------|-------------|
+| `bun run start` | React dev server |
+| `bun run start:server` | Razorpay order API |
+| `bun run build` | Production build |
+| `bun run test` | Jest tests (cart reducer, etc.) |
 
-### `npm run eject`
+## Firestore security rules
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Rules live in [`firestore.rules`](./firestore.rules):
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **categories** â€” public read (catalog); writes disabled from clients
+- **users/{userId}** â€” read/write only when `request.auth.uid == userId`
+- **users/{userId}/orders** â€” read/write only for the signed-in owner
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Deploy rules in the [Firebase Console](https://console.firebase.google.com) â†’ Firestore â†’ Rules, or with the Firebase CLI:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+firebase deploy --only firestore:rules
+```
 
-## Learn More
+## Seed categories (one-time)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+If the `categories` collection is empty, seed from `src/shop-data.js`:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**From browser devtools** (while signed in and app is running):
 
-### Code Splitting
+```js
+import { seedCategoriesIfEmpty } from './utils/firebase/seed-categories.utils';
+await seedCategoriesIfEmpty();
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Or temporarily call `seedCategoriesIfEmpty()` from a `useEffect` in development, then remove it.
 
-### Analyzing the Bundle Size
+The helper skips seeding when categories already exist.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**After updating `src/shop-data.js`:** delete the existing `categories` documents in Firestore (or the whole collection), then run `seedCategoriesIfEmpty()` again so the database matches the file. Seeding does not run automatically on app start.
 
-### Making a Progressive Web App
+## Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Netlify deployment
 
-### Advanced Configuration
+[`netlify.toml`](./netlify.toml) runs `bun run build` and publishes `build/`. [`public/_redirects`](./public/_redirects) maps `/*` to `/index.html` for SPA routing.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**Env vars in the Netlify UI** (Site settings -> Environment variables -> **Production** and **Deploy previews**):
 
-### Deployment
+| Variable | Notes |
+|----------|--------|
+| All `REACT_APP_FIREBASE_*` from [`.env.example`](./.env.example) | Required for auth and Firestore |
+| `REACT_APP_RAZORPAY_KEY_ID` | When using Razorpay (not mock) |
+| `REACT_APP_API_URL` | Deployed payment server URL (not localhost) |
+| `REACT_APP_USE_MOCK_PAYMENT` | `true` = demo without backend; `false` = live API |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+**Secrets:** `RAZORPAY_KEY_SECRET` stays on the payment server host only (`server/index.js`), not in Netlify.
 
-### `npm run build` fails to minify
+**How Netlify picks up env changes:** CRA injects `REACT_APP_*` at **build time**. After any change: **Deploy -> Trigger deploy -> Clear cache and deploy site**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Payment server:** Netlify is static React only; deploy `server/` on Render/Railway and set `REACT_APP_API_URL` to that URL.
+
+**Firestore:** Deploy [`firestore.rules`](./firestore.rules) via Firebase Console or `firebase deploy --only firestore:rules`.
+
+### Build locally
+
+```bash
+bun run build
+```
+
+## Features
+
+- Authentication (email/password + Google popup)
+- Firestore categories + Redux Toolkit cart
+- Lazy-loaded routes (Shop, Checkout, Auth, Orders, Product Detail)
+- Razorpay checkout + demo fallback
+- Orders in `users/{uid}/orders` with protected `/orders` page
+- Server-side Razorpay signature verification
+
+## Tests
+
+```bash
+bun run test -- --watchAll=false
+```
+
+Cart reducer tests: `src/store/cart/cart.reducer.test.js`

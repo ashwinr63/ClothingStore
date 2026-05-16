@@ -1,68 +1,58 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const CheckoutContainer = styled.div ` 
-width: 55%;
-min-height: 90vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-margin: 50px auto 0;
+export const CheckoutContainer = styled.div`
+  width: min(720px, 100%);
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+`;
 
-`
+export const CheckoutTitle = styled.h2`
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin: 0 0 1.5rem;
+  text-align: center;
+`;
 
 export const CheckoutHeader = styled.div`
-width: 100%;
-        padding: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid darkgrey;
+  width: 100%;
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--color-border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+`;
 
-`
+export const HeaderBlock = styled.div`
+  text-transform: capitalize;
+  width: 23%;
 
-export const HeaderBlock = styled.div ` 
-text-transform: capitalize;
-width: 23%;
-
-&:last-child {
+  &:last-child {
     width: 8%;
-}
+  }
+`;
 
-`
+export const Total = styled.span`
+  margin-top: 1.5rem;
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+`;
 
-export const Total = styled.span ` 
-margin-top: 30px;
-        margin-left: auto;
-        font-size: 36px;
-`
-/* .checkout-container {
-    width: 55%;
-    min-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 50px auto 0;
-
-    .checkout-header {
-        width: 100%;
-        padding: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid darkgrey;
-
-        .header-block {
-            text-transform: capitalize;
-            width: 23%;
-
-            &:last-child {
-                width: 8%;
-            }
-        }
-    }
-
-    .total {
-        margin-top: 30px;
-        margin-left: auto;
-        font-size: 36px;
-    }
-}
- */
+export const EmptyCartMessage = styled.p`
+  margin-top: 2rem;
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  text-align: center;
+`;

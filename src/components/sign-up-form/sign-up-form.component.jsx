@@ -46,6 +46,7 @@ const SignUpForm = () => {
 
       await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
+      toast.success('Account created successfully');
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
         toast.error('Cannot create user, email already in use');

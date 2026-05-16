@@ -15,21 +15,35 @@ import {
   doc,
   getDoc,
   setDoc,
+  addDoc,
   collection,
   writeBatch,
   query,
+  orderBy,
   getDocs,
 } from "firebase/firestore";
 
-// Firebase configuration from .env variables
+// Firebase configuration from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyAtj3lwbOu3deUrYEB3NZFETkVl-1VqecA",
-  authDomain: "clothing-store-db-f950f.firebaseapp.com",
-  projectId: "clothing-store-db-f950f",
-  storageBucket: "clothing-store-db-f950f.appspot.com",
-  messagingSenderId: "463330538655",
-  appId: "1:463330538655:web:0b4b2ae90625c15576deaa",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
+
+const missingFirebaseKeys = Object.entries(firebaseConfig)
+  .filter(([, value]) => !value)
+  .map(([key]) => key);
+
+if (missingFirebaseKeys.length) {
+  throw new Error(
+    `Missing Firebase config values: ${missingFirebaseKeys.join(
+      ", "
+    )}. Add REACT_APP_FIREBASE_* values in your .env file.`
+  );
+}
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
@@ -49,8 +63,7 @@ export const db = getFirestore(firebaseApp);
 
 export const addCollectionAndDocuments = async (
   collectionKey,
-  objectsToAdd,
-  field
+  objectsToAdd
 ) => {
   const collectionRef = collection(db, collectionKey);
   const batch = writeBatch(db);
@@ -61,7 +74,6 @@ export const addCollectionAndDocuments = async (
   });
 
   await batch.commit();
-  console.log("done");
 };
 
 export const getCategoriesAndDocuments = async () => {
@@ -94,7 +106,7 @@ export const createUserDocumentFromAuth = async (
         ...additionalInformation,
       });
     } catch (error) {
-      console.log("error creating the user", error.message);
+      throw new Error(`Error creating the user: ${error.message}`);
     }
   }
 
@@ -117,3 +129,38 @@ export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const createOrderDocument = async (
+  userId,
+  { items, total, paymentProvider, paymentId, orderId }
+) => {
+  if (!userId) {
+    throw new Error("User must be signed in to save an order.");
+  }
+
+  const ordersRef = collection(db, "users", userId, "orders");
+
+  const orderDocRef = await addDoc(ordersRef, {
+    items,
+    total,
+    createdAt: new Date(),
+    paymentProvider,
+    ...(paymentId ? { paymentId } : {}),
+    ...(orderId ? { orderId } : {}),
+  });
+
+  return orderDocRef.id;
+};
+
+export const getUserOrders = async (userId) => {
+  if (!userId) return [];
+
+  const ordersRef = collection(db, "users", userId, "orders");
+  const ordersQuery = query(ordersRef, orderBy("createdAt", "desc"));
+  const querySnapshot = await getDocs(ordersQuery);
+
+  return querySnapshot.docs.map((orderDoc) => ({
+    id: orderDoc.id,
+    ...orderDoc.data(),
+  }));
+};

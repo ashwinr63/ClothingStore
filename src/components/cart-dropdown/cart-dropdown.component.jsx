@@ -12,6 +12,7 @@ const CartDropdown = () => {
   const navigate = useNavigate();
 
   const goToCheckoutHandler = () => {
+    if (!cartItems.length) return;
     navigate('/checkout');
   };
 
@@ -24,7 +25,9 @@ const CartDropdown = () => {
           <EmptyMessage>Your cart is empty</EmptyMessage>
         )}
       </CartItems>
-      <Button onClick={goToCheckoutHandler}>CHECKOUT</Button>
+      <Button onClick={goToCheckoutHandler} disabled={!cartItems.length}>
+        CHECKOUT
+      </Button>
     </CartDropdownContainer>
   );
 };

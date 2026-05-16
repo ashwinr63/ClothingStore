@@ -1,10 +1,18 @@
 import { useDispatch } from 'react-redux';
 
-import { Footer, Name, Price, ProductCardContainer } from './product-card.styles.jsx';
+import {
+  AddButtonWrap,
+  Footer,
+  ImageWrapper,
+  Name,
+  Price,
+  ProductCardContainer,
+  ProductImageLink,
+} from './product-card.styles.jsx';
 import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 import { addItemToCart } from '../../store/cart/cart.reducer';
-console.log('addItemToCart:', addItemToCart, typeof addItemToCart);
-const ProductCard = ({ product }) => {
+
+const ProductCard = ({ product, categoryName }) => {
   const { name, price, imageUrl } = product;
   const dispatch = useDispatch();
 
@@ -12,14 +20,20 @@ const ProductCard = ({ product }) => {
 
   return (
     <ProductCardContainer>
-      <img src={imageUrl} alt={`${name}`} />
+      <ImageWrapper>
+        <ProductImageLink to={`/shop/${categoryName}/${product.id}`}>
+          <img src={imageUrl} alt={name} loading="lazy" />
+        </ProductImageLink>
+      </ImageWrapper>
       <Footer>
         <Name>{name}</Name>
-        <Price>{price}</Price>
+        <Price>₹{price}</Price>
       </Footer>
-      <Button buttonType={BUTTON_TYPE_CLASSES.inverted} onClick={addProductToCart}>
-        Add To Cart
-      </Button>
+      <AddButtonWrap>
+        <Button buttonType={BUTTON_TYPE_CLASSES.inverted} onClick={addProductToCart}>
+          Add To Cart
+        </Button>
+      </AddButtonWrap>
     </ProductCardContainer>
   );
 };
