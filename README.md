@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# ClothingStore
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An e-commerce web application for browsing and purchasing clothing online. ClothingStore provides a complete shopping experience where customers can explore curated clothing categories, manage a shopping cart, and securely check out with Stripe payments.
 
-## Available Scripts
+## What It Does
 
-In the project directory, you can run:
+ClothingStore is an online clothing shop offering products across five categories: **Hats**, **Jackets**, **Sneakers**, **Womens**, and **Mens**. Users can:
 
-### `npm start`
+- **Browse products** by category with images and pricing
+- **Create an account** using email/password or sign in with Google
+- **Add items to a cart** with real-time quantity and total tracking
+- **Check out securely** through Stripe payment processing
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Layer            | Technology                          |
+|------------------|-------------------------------------|
+| Frontend         | React 18, React Router 6            |
+| State Management | Redux Toolkit, Reselect              |
+| Styling          | Styled Components, SASS              |
+| Authentication   | Firebase Auth (Email + Google OAuth) |
+| Database         | Cloud Firestore                      |
+| Payments         | Stripe                               |
+| Hosting          | Netlify (with serverless functions)  |
 
-### `npm test`
+## Project Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+src/
+  components/       UI components (buttons, cart, product cards, forms, etc.)
+  routes/           Page-level components (home, shop, checkout, authentication)
+  store/            Redux slices for user, cart, and categories
+  utils/            Firebase configuration and helper utilities
+  contexts/         Legacy Context API files (superseded by Redux)
 
-### `npm run build`
+netlify/
+  functions/        Serverless function for Stripe payment intent creation
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Node.js (or Bun)
+- A Firebase project with Authentication and Firestore enabled
+- A Stripe account
 
-### `npm run eject`
+### Environment Variables
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+REACT_APP_STRIPE_PUBLISHABLE_KEY=<your-stripe-publishable-key>
+STRIPE_SECRET_KEY=<your-stripe-secret-key>
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Run Locally
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm install
+npm start
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The app runs at [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+### Build for Production
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Run Tests
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm test
+```
