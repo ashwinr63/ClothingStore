@@ -1,6 +1,10 @@
-[build]
-  command = "bun run build"
+﻿[build]
+  command = "bun install && bun run build"
   publish = "build"
+
+[build.environment]
+  BUN_VERSION = "1.3.13"
+  NETLIFY_SKIP_INSTALL = "true"
 
 [[redirects]]
   from = "/*"
