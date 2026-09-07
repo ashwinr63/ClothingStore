@@ -12,5 +12,5 @@ test('renders navigation with Shop link', () => {
       </BrowserRouter>
     </Provider>
   );
-  expect(screen.getByText(/Shop/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Shop' })).toBeInTheDocument();
 });
