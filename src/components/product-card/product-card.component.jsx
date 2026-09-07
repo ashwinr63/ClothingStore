@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { Footer, Name, Price, ProductCardContainer } from './product-card.styles.jsx';
 import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 import { addItemToCart } from '../../store/cart/cart.reducer';
-console.log('addItemToCart:', addItemToCart, typeof addItemToCart);
 const ProductCard = ({ product }) => {
   const { name, price, imageUrl } = product;
   const dispatch = useDispatch();
