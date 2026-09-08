@@ -15,10 +15,9 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: [
           'user.currentUser',
-          'payload',
         ],
         // Ignore actions dispatched by Redux Toolkit
-        ignoredActionsPaths: ['meta.arg', 'payload'],
+        ignoredActionPaths: ['meta.arg', 'payload'],
       },
     }),
 });
