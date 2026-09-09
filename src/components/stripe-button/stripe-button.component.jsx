@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { useSelector } from 'react-redux';
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCartTotal, selectCartItems } from '../../store/cart/cart.selector';
+import { clearCart } from '../../store/cart/cart.reducer';
 import Button from '../button/button.component';
 import styled from 'styled-components';
 import toast from 'react-hot-toast';
@@ -29,6 +31,32 @@ const StripeButton = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const cartItems = useSelector(selectCartItems);
   const cartTotal = useSelector(selectCartTotal);
+  const dispatch = useDispatch();
+  const cardElementRef = useRef(null);
+  const stripeRef = useRef(null);
+  const elementsRef = useRef(null);
+
+  useEffect(() => {
+    let card;
+    let mounted = true;
+    (async () => {
+      const stripe = await stripePromise;
+      if (!stripe || !mounted) return;
+      stripeRef.current = stripe;
+      const elements = stripe.elements();
+      elementsRef.current = elements;
+      card = elements.create('card', { hidePostalCode: true });
+      if (cardElementRef.current) {
+        card.mount(cardElementRef.current);
+      }
+    })();
+    return () => {
+      mounted = false;
+      try {
+        if (card) card.destroy();
+      } catch {}
+    };
+  }, []);
 
   const handlePayment = async () => {
     if (!cartItems.length) {
@@ -41,17 +69,16 @@ const StripeButton = () => {
       return;
     }
 
+    const stripe = stripeRef.current;
+    const elements = elementsRef.current;
+    if (!stripe || !elements) {
+      toast.error('Stripe failed to load. Please check your configuration.');
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
-      const stripe = await stripePromise;
-
-      if (!stripe) {
-        toast.error('Stripe failed to load. Please check your configuration.');
-        setIsProcessing(false);
-        return;
-      }
-
       // Call your Netlify serverless function or API endpoint
       const response = await fetch('/.netlify/functions/create-payment-intent', {
         method: 'POST',
@@ -73,13 +100,15 @@ const StripeButton = () => {
         throw new Error('No client secret returned');
       }
 
-      // Confirm payment with Stripe
-      const { error } = await stripe.confirmCardPayment(clientSecret, {
+      // Confirm payment with Stripe using the Card Element
+      const cardElement = elements.getElement('card');
+      if (!cardElement) {
+        throw new Error('Payment form is not ready yet.');
+      }
+
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
-          card: {
-            // This would normally come from Stripe Elements
-            // For now, we'll use redirect for simplicity
-          },
+          card: cardElement,
         },
       });
 
@@ -87,9 +116,12 @@ const StripeButton = () => {
         toast.error(error.message);
         setIsProcessing(false);
       } else {
-        toast.success('Payment successful!');
-        // Clear cart and redirect would happen here
-        // For now, just reset processing state
+        if (paymentIntent && paymentIntent.status === 'succeeded') {
+          toast.success('Payment successful!');
+          dispatch(clearCart());
+        } else {
+          toast.success('Payment submitted!');
+        }
         setIsProcessing(false);
       }
     } catch (error) {
@@ -101,6 +133,9 @@ const StripeButton = () => {
 
   return (
     <StripeButtonContainer>
+      <div style={{ width: '100%', marginRight: 16, minWidth: 300 }}>
+        <div ref={cardElementRef} style={{ padding: '12px 14px', border: '1px solid #ccc', borderRadius: 4, marginBottom: 12 }} />
+      </div>
       <Button
         buttonType="inverted"
         onClick={handlePayment}
