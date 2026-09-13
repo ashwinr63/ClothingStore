@@ -11,6 +11,10 @@ import Navigation from "./routes/navigation/navigation.component";
 import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
+import Orders from "./routes/orders/orders.component";
+import Profile from "./routes/profile/profile.component";
+import NotFound from "./routes/not-found/not-found.component";
+import RequireAuth from "./components/require-auth/require-auth.component";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -34,7 +38,23 @@ const App = () => {
         <Route path="shop/*" element={<Shop />} />
         <Route path="auth" element={<Authentication />} />
         <Route path="checkout" element={<Checkout />} />
-        <Route path="*" element={<Home />} />
+        <Route
+          path="orders"
+          element={
+            <RequireAuth>
+              <Orders />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="profile"
+          element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

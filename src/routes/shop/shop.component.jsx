@@ -6,6 +6,7 @@ import { Routes, Route } from 'react-router-dom';
 import { fetchCategoriesAsync } from '../../store/categories/category.thunks';
 import { selectCategoriesIsLoading } from '../../store/categories/category.selector.js';
 import Spinner from '../../components/spinner/spinner.component.jsx';
+import Product from '../product/product.component.jsx';
 const Shop = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectCategoriesIsLoading);
@@ -18,6 +19,7 @@ const Shop = () => {
     <Routes>
       <Route index element={isLoading ? <Spinner /> : <CategoriesPreview />} />
       <Route path=':category' element={isLoading ? <Spinner /> : <Category />} />
+      <Route path=':category/:productId' element={isLoading ? <Spinner /> : <Product />} />
     </Routes>
   );
 };
