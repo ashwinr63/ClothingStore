@@ -20,7 +20,7 @@ ClothingStore is an online clothing shop offering products across five categorie
 | Styling          | Styled Components, SASS              |
 | Authentication   | Firebase Auth (Email + Google OAuth) |
 | Database         | Cloud Firestore                      |
-| Payments         | Stripe                               |
+| Payments         | Stripe (legacy); Razorpay in progress (separate PR) |
 | Hosting          | Netlify (with serverless functions)  |
 
 ## Project Structure
@@ -47,10 +47,22 @@ netlify/
 
 ### Environment Variables
 
+Use `.env.example` as a reference. Copy it to `.env` and fill in your Firebase and client-side Razorpay values (no secrets).
+
 ```
-REACT_APP_STRIPE_PUBLISHABLE_KEY=<your-stripe-publishable-key>
-STRIPE_SECRET_KEY=<your-stripe-secret-key>
+# Firebase (client)
+REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=000000000000
+REACT_APP_FIREBASE_APP_ID=1:000000000000:web:xxxxxxxxxxxxxxxxxxxxxx
+
+# Razorpay (client)
+REACT_APP_RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
 ```
+
+Payments integration (Stripe/Razorpay) is owned by a separate agent; this branch does not modify checkout/payment code.
 
 ### Run Locally
 
@@ -72,3 +84,27 @@ npm run build
 ```bash
 npm test
 ```
+
+## Firestore Security Rules
+
+This repo includes `firestore.rules`:
+
+- Public read for `categories/*`
+- Authenticated users can read/write their own `users/{uid}` and `users/{uid}/orders/*`
+
+To deploy:
+
+```bash
+firebase login
+firebase init firestore   # if not already initialized
+firebase deploy --only firestore:rules
+```
+
+## Cart Persistence
+
+The cart is persisted to `localStorage` (no redux-persist) to minimize dependencies. Clearing site data will reset the cart.
+
+## Notes
+
+- The `src/assests` directory name is intentionally left as-is to avoid broad refactors; references remain valid.
+- A `bun.lock` is present; installing with npm is fine. Do not delete the lockfile.

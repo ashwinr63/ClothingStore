@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const BaseButton = styled.button`
   min-width: 165px;
@@ -42,4 +42,18 @@ export const InvertedButton = styled(BaseButton)`
     color: white;
     border: none;
   }
+`;
+
+const spin = keyframes`
+  to { transform: rotate(360deg); }
+`;
+
+export const ButtonSpinner = styled.div`
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255,255,255,0.6);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+  align-self: center;
 `;

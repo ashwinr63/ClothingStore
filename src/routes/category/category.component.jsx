@@ -8,21 +8,37 @@ const Category = () => {
 
     const { category } = useParams();
     const categoriesMap = useSelector(selectCategoriesMap)
-    console.log('render/re-rendering category')
     const [products, setProducts] = useState(categoriesMap[category])
+    const [filterText, setFilterText] = useState('')
    
     useEffect(() => {
-        console.log('effect fired calling setProducts')
         setProducts(categoriesMap[category])
     }, [category, categoriesMap])
+
+    const filteredProducts = products
+        ? products.filter((p) =>
+            p.name.toLowerCase().includes(filterText.toLowerCase().trim())
+          )
+        : [];
 
     return (
         <Fragment>
             <CategoryTitle>{category.toUpperCase()}</CategoryTitle>
+            <div style={{ margin: '0 0 16px 0' }}>
+                <input
+                    type="text"
+                    placeholder="Filter by name"
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    style={{ padding: '8px', width: '100%', maxWidth: '320px' }}
+                />
+            </div>
             <CategoryContainer>
 
-                {products &&
-                    products.map((product) => <ProductCard key={product.id} product={product} />)
+                {filteredProducts &&
+                    filteredProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} category={category} />
+                    ))
                 }
             </CategoryContainer>
         </Fragment>

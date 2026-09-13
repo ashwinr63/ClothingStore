@@ -61,7 +61,6 @@ export const addCollectionAndDocuments = async (
   });
 
   await batch.commit();
-  console.log("done");
 };
 
 export const getCategoriesAndDocuments = async () => {
@@ -70,6 +69,14 @@ export const getCategoriesAndDocuments = async () => {
 
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map((doc) => doc.data());
+};
+
+// Fetch orders for a given user from subcollection: users/{uid}/orders
+export const getUserOrders = async (uid) => {
+  if (!uid) return [];
+  const ordersRef = collection(db, 'users', uid, 'orders');
+  const snapshot = await getDocs(ordersRef);
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 
 export const createUserDocumentFromAuth = async (
