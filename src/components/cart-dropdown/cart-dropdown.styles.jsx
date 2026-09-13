@@ -8,16 +8,19 @@ import {
 
 export const CartDropdownContainer = styled.div `
 position: absolute;
-width: 240px;
-height: 340px;
+width: 320px;
+max-width: calc(100vw - 24px);
+height: 380px;
 display: flex;
 flex-direction: column;
-padding: 20px;
-border: 1px solid black;
-background-color: white;
-top: 90px;
-right: 40px;
-z-index: 5;
+padding: var(--space-4);
+border: 1px solid var(--color-border);
+border-radius: var(--radius-md);
+background-color: var(--color-elevated);
+box-shadow: var(--shadow-lg);
+top: 72px;
+right: var(--space-6);
+z-index: 50;
 
 ${BaseButton}
 ${GoogleSignInButton}
@@ -26,15 +29,16 @@ margin-top: auto;
 `
 
 export const EmptyMessage = styled.span `
-font-size: 18px;
+font-size: var(--text-base);
+color: var(--color-muted);
 margin: 50px auto;
 `
 
 export const CartItems = styled.div `
-height: 240px;
-        display: flex;
-        flex-direction: column;
-        overflow: scroll;
+height: 280px;
+display: flex;
+flex-direction: column;
+overflow: auto;
 `
 
 /* .cart-dropdown-container {

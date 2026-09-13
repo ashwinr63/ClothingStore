@@ -1,11 +1,21 @@
+import { Link } from 'react-router-dom';
+import { NotFoundContainer, NotFoundCard, Title, Subtitle } from './not-found.styles.jsx';
+import Button from '../../components/button/button.component';
+
 const NotFound = () => {
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h2>404 - Page Not Found</h2>
-      <p>The page you are looking for does not exist.</p>
-    </div>
+    <NotFoundContainer>
+      <div className="page-container">
+        <NotFoundCard>
+          <Title>Page not found</Title>
+          <Subtitle>We couldn't find what you were looking for.</Subtitle>
+          <Link to="/">
+            <Button>Go to Home</Button>
+          </Link>
+        </NotFoundCard>
+      </div>
+    </NotFoundContainer>
   );
 };
 
 export default NotFound;
-
