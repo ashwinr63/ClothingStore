@@ -15,8 +15,8 @@ const SpinnerOverlay = styled.div`
 const SpinnerContainer = styled.div`
   width: 48px;
   height: 48px;
-  border: 4px solid rgba(0,0,0,0.1);
-  border-left-color: black;
+  border: 4px solid rgba(0,0,0,0.08);
+  border-left-color: var(--color-accent);
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
 `;
